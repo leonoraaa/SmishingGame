@@ -3,13 +3,12 @@ import java.awt.*;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.List;   //leonora
-import java.util.ArrayList;   //leonora
-import java.util.Collections;   //leonora
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
 
-
-//leonora start
-class Message {
+//leonora
+class Message {    //structure of smishing message
     private String text;
     private boolean Smishing;
 
@@ -26,9 +25,8 @@ class Message {
         return Smishing;
     }
 }
-//leonora end
 
-//mohit start
+//mohit
 public class RealVsSmishGame {
     private JFrame frame;
     private JTextArea message1, message2;
@@ -40,20 +38,20 @@ public class RealVsSmishGame {
     private int score = 0;   //leonora
     private List<Message[]> questionPairs;   //leonora
 
-//mohit start
+    //mohit
     public RealVsSmishGame() {
         loadMessagePairs();   //leonora
 
-        frame = new JFrame("Game 1: Real vs Smish");
+        frame = new JFrame("Game 1: Real vs Smishing Game");    //title of the window
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(600, 400);
+        frame.setSize(600, 400);   //window size
         frame.setLayout(new BorderLayout());
 
-        JLabel title = new JLabel("Select the Smishing Message", SwingConstants.CENTER);
-        title.setFont(new Font("Arial", Font.BOLD, 18));
-        frame.add(title, BorderLayout.NORTH);
+        JLabel title = new JLabel("Please select the Smishing Message from the below options:", SwingConstants.CENTER);      //Center text in the middle
+        title.setFont(new Font("Arial", Font.BOLD, 22));    //attributes
+        frame.add(title, BorderLayout.NORTH);    //add the title and place it north of the window
 
-        JPanel panel = new JPanel(new GridLayout(1, 2, 10, 10));
+        JPanel panel = new JPanel(new GridLayout(1, 2, 10, 10));    //set up format for the messages
         message1 = createMessageBox(0);
         message2 = createMessageBox(1);
         panel.add(new JScrollPane(message1));
@@ -61,7 +59,7 @@ public class RealVsSmishGame {
         frame.add(panel, BorderLayout.CENTER);
 
         //leonora start
-        JProgressBar progressBar = new JProgressBar(0, questionPairs.size());
+        progressBar = new JProgressBar(0, questionPairs.size());
         progressBar.setStringPainted(true);
         progressBar.setValue(0);
         progressBar.setPreferredSize(new Dimension(500, 20));
@@ -82,7 +80,7 @@ public class RealVsSmishGame {
         restartButton.addActionListener(e -> restartGame());   //leonora
 
         JPanel bottom = new JPanel(new BorderLayout());
-        bottom.add(feedbackLabel, BorderLayout.CENTER);
+        bottom.add(feedbackLabel, BorderLayout.SOUTH);
         bottom.add(progressLabel);   //leonora
         bottom.add(restartButton);
         bottom.add(nextButton, BorderLayout.SOUTH);
@@ -91,21 +89,22 @@ public class RealVsSmishGame {
         loadQuestion();
         frame.setVisible(true);
     }
-//mohit end
 
-//leonora start
-private void restartGame() {
-    current = 0;
-    score = 0;
-    Collections.shuffle(questionPairs);
-    loadQuestion();
-    feedbackLabel.setText("Click the smishing message");
-    nextButton.setEnabled(false);
-    progressLabel.setText("");
+    //leonora
+    private void restartGame() {
+        current = 0;
+        score = 0;
+        Collections.shuffle(questionPairs);
+
+        loadQuestion();
+        
+        feedbackLabel.setText("Click the smishing message");
+        nextButton.setEnabled(false);
+        progressBar.setValue(0);
+        progressLabel.setText("");
 }
-//leonora end
 
-//mohit start
+    //mohit
     private JTextArea createMessageBox(int index) {
         JTextArea area = new JTextArea();
         area.setLineWrap(true);
@@ -121,16 +120,15 @@ private void restartGame() {
         });
         return area;
     }
-//mohit end
 
-//leonora start
+    //leonora
     private void loadMessagePairs() {
         List<Message> messages = new ArrayList<>();   //list to contain the following messages   //Leonora
-        messages.add(new Message("Your bank account has been compromised. Click the link to investigate http://.....", true));
+        messages.add(new Message("Your bank account has been compromised. Click the link to investigate http://bit.ly-21929749.com", true));
         messages.add(new Message("Your electricity bill is due 30/4/2025. Please ensure payment is submitted by 29/4/2025 ", false));
-        messages.add(new Message("You've won a free iPhone. Click this link to claim http://.....", true));
+        messages.add(new Message("You've won a free iPhone. Click this link to claim http://free-iphone.com", true));
         messages.add(new Message("Your package is out for delivery. Estimated arrival is 29/3/2025", false));
-        messages.add(new Message("Your paypal account has been locked. Click this link to verify http://....", true));
+        messages.add(new Message("Your paypal account has been locked. To unlock your account, enter your credit card details at http://paypa1.com.au", true));
         messages.add(new Message("REMINDER: Your appointment is scheduled for tomorrow at Berwick Medical Clinic", false));
         Collections.shuffle(messages);
 
@@ -139,21 +137,20 @@ private void restartGame() {
             questionPairs.add(new Message[] {messages.get(i), messages.get(i + 1)});
         }
     }
-    //leonora end
     
-//mohit start
+    //mohit
     private void loadQuestion() {
         message1.setBackground(Color.WHITE);
         message2.setBackground(Color.WHITE);
-        feedbackLabel.setText("Click the smishing message");
 
         Message[] pair = questionPairs.get(current);   //leonora
         message1.setText(pair[0].getText());   //shared
         message2.setText(pair[1].getText());   //shared
-    }
-//mohit end
 
-//mohit start
+        feedbackLabel.setText("Click the smishing message");
+    }
+
+    //mohit
     private void checkAnswer(int selected) {
         Message[] pair = questionPairs.get(current);   //leonora
         boolean correct = pair[selected].isSmishing();   //leonora
@@ -170,32 +167,34 @@ private void restartGame() {
         nextButton.setEnabled(true);   //leonora
     }
 
-//mohit start
-    private void nextQuestion() {
-        current++;
-//leonora start
-        progressBar.setValue(current);
-
-        if(current >= questionPairs.size()) {
-            JOptionPane.showMessageDialog(frame,
-                "Game Over! Your score: " + score + " / " + questionPairs.size(),
-                "Finished", JOptionPane.INFORMATION_MESSAGE);
-            nextButton.setEnabled(false);
+    //leonora
+    private void endGame() {
+        if (current >= questionPairs.size()){
+            int answer = JOptionPane.showConfirmDialog(frame, "Game Over! Your score: " + score + " / " + questionPairs.size() + "Play again?", "Game Over",  JOptionPane.YES_NO_OPTION);
+    
+            if (answer == JOptionPane.YES_OPTION) {
+                restartGame();   //reset progress
+            } else {
+                System.exit(0);
+            }
             return;
         }
+    }
 
+    //mohit
+    private void nextQuestion() {
+        current++;
+        progressBar.setValue(current);
+
+        endGame();  //leonora, run method and check progress
         loadQuestion();
 
         nextButton.setEnabled(false);
         feedbackLabel.setText("Click the smishing message");
         }
-//leonora end
 
-//mohit end
-
-//mohit start
+    //mohit
     public static void main(String[] args) {
         SwingUtilities.invokeLater(RealVsSmishGame::new);
     }
 }
-//mohit end
