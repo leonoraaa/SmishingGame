@@ -79,11 +79,11 @@ public class RealVsSmishGame {
         restartButton = new JButton("Restart");   //leonora
         restartButton.addActionListener(e -> restartGame());   //leonora
 
-        JPanel bottom = new JPanel(new BorderLayout());
-        bottom.add(feedbackLabel, BorderLayout.SOUTH);
+        JPanel bottom = new JPanel(new FlowLayout());
+        bottom.add(feedbackLabel);
         bottom.add(progressLabel);   //leonora
         bottom.add(restartButton);
-        bottom.add(nextButton, BorderLayout.SOUTH);
+        bottom.add(nextButton);
         frame.add(bottom, BorderLayout.SOUTH);
 
         loadQuestion();
@@ -133,8 +133,13 @@ public class RealVsSmishGame {
         Collections.shuffle(messages);
 
         questionPairs = new ArrayList<>();
-        for (int i = 0; i < messages.size() - 1; i += 2) {
-            questionPairs.add(new Message[] {messages.get(i), messages.get(i + 1)});
+
+        Collections.shuffle(messages);
+
+        for (int i; i < messages.size(); i++) {
+            Message msg1 = messages.get(i);
+            Message msg2 = messages.get(i + 1);
+            questionPairs.add(new Message[] {msg1, msg2});
         }
     }
     
