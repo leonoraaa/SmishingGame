@@ -136,7 +136,7 @@ public class RealVsSmishGame {
 
         Collections.shuffle(messages);
 
-        for (int i; i < messages.size(); i++) {
+        for (int i = 0; i < messages.size(); i++) {
             Message msg1 = messages.get(i);
             Message msg2 = messages.get(i + 1);
             questionPairs.add(new Message[] {msg1, msg2});
