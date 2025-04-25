@@ -36,10 +36,15 @@ public class RealVsSmishGame {
     private JButton nextButton;
     private int current = 0;
     private int score = 0;   //leonora
+    private List<Message> realMessages;   //leonora
+    private List<Message> fakeMessages;   //leonora
     private List<Message[]> questionPairs;   //leonora
 
     //mohit
     public RealVsSmishGame() {
+        loadRealMessage();
+        loadFakeMessage();
+        questionPairs = new ArrayList<>();
         loadMessagePairs();   //leonora
 
         frame = new JFrame("Game 1: Real vs Smishing Game");    //title of the window
@@ -79,8 +84,11 @@ public class RealVsSmishGame {
         restartButton = new JButton("Restart");   //leonora
         restartButton.addActionListener(e -> restartGame());   //leonora
 
+        JPanel top = new JPanel(new BorderLayout());
+        top.add(feedbackLabel);
+        frame.add(top, BorderLayout.NORTH);
+
         JPanel bottom = new JPanel(new FlowLayout());
-        bottom.add(feedbackLabel);
         bottom.add(progressLabel);   //leonora
         bottom.add(restartButton);
         bottom.add(nextButton);
@@ -121,25 +129,37 @@ public class RealVsSmishGame {
         return area;
     }
 
+        //leonora
+    private void loadRealMessage() {
+        realMessages = new ArrayList<>();
+
+        realMessages.add(new Message("Your electricity bill is due 30/4/2025. Please ensure payment is submitted by 29/4/2025 ", false));
+        realMessages.add(new Message("Your package is out for delivery. Estimated arrival is 29/3/2025", false));
+        realMessages.add(new Message("REMINDER: Your appointment is scheduled for tomorrow at Berwick Medical Clinic", false));
+    }
+
+
     //leonora
+    private void loadFakeMessage() {
+        fakeMessages = new ArrayList<> ();
+
+        fakeMessages.add(new Message("Your bank account has been compromised. Click the link to investigate http://bit.ly-21929749.com", true));
+        fakeMessages.add(new Message("You've won a free iPhone. Click this link to claim http://free-iphone.com", true));
+        fakeMessages.add(new Message("Your paypal account has been locked. To unlock your account, enter your credit card details at http://paypa1.com.au", true));
+
+    }
+
     private void loadMessagePairs() {
-        List<Message> messages = new ArrayList<>();   //list to contain the following messages   //Leonora
-        messages.add(new Message("Your bank account has been compromised. Click the link to investigate http://bit.ly-21929749.com", true));
-        messages.add(new Message("Your electricity bill is due 30/4/2025. Please ensure payment is submitted by 29/4/2025 ", false));
-        messages.add(new Message("You've won a free iPhone. Click this link to claim http://free-iphone.com", true));
-        messages.add(new Message("Your package is out for delivery. Estimated arrival is 29/3/2025", false));
-        messages.add(new Message("Your paypal account has been locked. To unlock your account, enter your credit card details at http://paypa1.com.au", true));
-        messages.add(new Message("REMINDER: Your appointment is scheduled for tomorrow at Berwick Medical Clinic", false));
-        Collections.shuffle(messages);
+        for (int i = 0; i < realMessages.size(); i++) {
+            Message realMessage = realMessages.get(i);
+            Message fakeMessage = fakeMessages.get(i);
 
-        questionPairs = new ArrayList<>();
-
-        Collections.shuffle(messages);
-
-        for (int i = 0; i < messages.size(); i++) {
-            Message msg1 = messages.get(i);
-            Message msg2 = messages.get(i + 1);
-            questionPairs.add(new Message[] {msg1, msg2});
+            if (i % 2 == 0) {   //if element's index is even do following
+                questionPairs.add(new Message[] {realMessage, fakeMessage});   //real message on right fake on left
+            }
+            else {   //if element's index is odd do following
+                questionPairs.add(new Message[] {fakeMessage, realMessage});   //real message on left fake on right
+            }
         }
     }
     
